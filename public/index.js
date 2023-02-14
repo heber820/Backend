@@ -7,8 +7,8 @@ socketClient.on('products', (prods)=>{
     console.log(prods)
     prods.forEach(prod => {
         cards.innerHTML += `
-        <div class="card" style="width: 18rem; margin-left: 20px; margin-bottom: 20px">
-    <img src=${prod.thumbnail} class="card-img-top" alt="imagen">
+        <div class="card" style="width: 20%; margin-left: 20px; margin-bottom: 20px; border-style: dotted;border-color: black; padding: 20px;">
+    <img src=${prod.thumbnail} style="width: 40%;" class="card-img-top" alt="imagen">
     <div class="card-body">
         <h5 class="card-title">${prod.title}</h5>
         <p class="card-text">${prod.description}</p>
@@ -21,4 +21,50 @@ socketClient.on('products', (prods)=>{
 </div>
         `
     });
+})
+
+//chat
+
+const nombreUsuario = document.getElementById('nombreUsuario')
+const formChat = document.getElementById('formChat')
+const inputMensaje = document.getElementById('mensaje')
+const chatParrafo = document.getElementById('chatParrafo')
+let usuario = null
+
+
+if(!usuario){
+    Swal.fire({
+        title: 'Bienvenid@',
+        text:'Ingresa tu email de usuario', 
+        input: 'text', 
+        inputValidator:(value)=>{
+            if(!value){
+                return 'Necesitas ingresar email'
+            }
+        }
+    })
+    .then(userName=>{
+        usuario = userName.value
+        nombreUsuario.innerText = usuario
+    })
+}
+
+
+formChat.onsubmit = (e) =>{
+    e.preventDefault()
+    const info = {
+        user: usuario, 
+        message: inputMensaje.value
+    }
+    socketClient.emit('mensaje', info)
+    inputMensaje.value = ''
+}
+
+
+socketClient.on('chat', mensajes=>{
+    const htmlRender = mensajes.map(e=>{
+        return `<p><strong>${e.nombre}:</strong>${e.mensaje}</p>`
+    }).join(' ')
+
+    chatParrafo.innerHTML = htmlRender
 })

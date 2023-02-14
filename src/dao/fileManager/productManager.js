@@ -27,7 +27,7 @@ export class ProductManager {
 
 
   async addProduct(producto) {
-    const {title,description,code,price,stock,category,thumbnails,status} = producto
+    const {title,description,code,price,stock,category,thumbnail,status} = producto
     try {
       console.log(title,description,code,price,stock,category)
     if(!title || !description || !price || !code || !stock || !category) {
@@ -45,7 +45,7 @@ export class ProductManager {
             price,
             stock,
             category, 
-            thumbnails: [],
+            thumbnail: "../../img/iphone-13-pink-select-2021.png",
             status: true,
           }
           const read = await this.getProducts()
@@ -136,107 +136,3 @@ export class ProductManager {
     return findCode
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// const productManager = new ProductManager('./archivos/products.json')
-
-// async function prueba() {
-//   await productManager.getProducts()
-//   // await productManager.addProduct('producto 1', 'Este es el producto prueba 1', 200, 'sin imagen', 'abc13423', 25)
-//   // await productManager.addProduct('producto 2', 'Este es el producto prueba 2', 200, 'sin imagen', 'dsa423dsdsa', 25)
-//   // await productManager.addProduct('producto 3', 'Este es el producto prueba 3', 200, 'sin imagen', 'asdasdasdas', 25)
-//   // await productManager.addProduct('producto 4', 'Este es el producto prueba 4', 200, 'sin imagen', 'dsadasas', 25)
-//   // const productoId = await productManager.getProductById(1)
-// }
-
-// prueba()
-
-
-
-
-
-
-// primer getProducts = array vacio
-// product.getProducts()
-
-// agrego productos:
-// product.addProduct('producto 1', 'Este es el producto prueba 1', 200, 'sin imagen', 'abc123', 25)
-// product.addProduct('producto 2', 'Este es el producto prueba 2', 200, 'sin imagen', 'dsadsdsa', 25)
-
-// segundo getProducts = array con el primer producto agregado
-// product.getProducts()
-
-// error = codigo repetido
-// product.addProduct('producto prueba', 'Este es el producto prueba', 200, 'sin imagen', 'abc123', 25)
-
-//objeto del producto con el id deseado:
-// product.getProductById(1)
-// product.getProductById(2)
-
-//id no encontrado:
-// product.getProductById(67)
-
-// actualizar productos:
-// product.updateProduct(2, {"title":'prueba cambiada'})
-
-//borrar producto:
-// product.deleteProduct(1)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

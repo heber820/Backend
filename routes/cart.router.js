@@ -1,8 +1,11 @@
 import { Router } from 'express'
-import {CartManager} from '../src/cartManager.js'
+
+import {CartManager} from '../src/dao/mongoManager/cartManager.js'
+
 
 const cartRouter = Router()
-const cartManager = new CartManager('../src/archivos/carts.json') 
+
+const cartManager = new CartManager() 
 
 
 cartRouter.post('/', async(req, res) => {

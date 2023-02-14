@@ -1,9 +1,10 @@
 import { Router } from 'express'
-import {ProductManager} from '../src/productManager.js'
+import {ProductManager} from '../src/dao/fileManager/productManager.js'
+
 import socketServer from "../src/app.js";
 
 const viewsRouter = Router()
-const productManager = new ProductManager('../src/archivos/products.json') 
+const productManager = new ProductManager('./archivos/products.json') 
 
 viewsRouter.get('/',async(req,res)=>{
   const products = await productManager.getProducts('max')
@@ -19,17 +20,14 @@ viewsRouter.get('/realtimeproducts',async (req,res)=>{
     res.render('realTimeProducts', {products})
 })
 
+
 viewsRouter.post('/realtimeproducts', async(req, res)=>{
   try {
     const product = await req.body
-    console.clear()
-    // console.log('product:',product)
+    console.log('product:',product)
     await productManager.addProduct(product)
-    // console.log('addNewProduct:',addNewProduct)
     const products = await productManager.getProducts('max')
-    console.log('product:',products)
     socketServer.sockets.emit('products', products)
-  // res.render('realTimeProducts', {products})
   } catch (error) {
     return error
   }

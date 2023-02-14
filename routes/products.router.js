@@ -1,9 +1,11 @@
 import { Router } from 'express'
-import {ProductManager} from '../src/productManager.js'
+
+import {ProductManager} from '../src/dao/mongoManager/productManager.js'
 import { upload } from '../middlewares/multer.js'
 
 const productRouter = Router()
-const productManager = new ProductManager('../src/archivos/products.json') 
+
+const productManager = new ProductManager() 
 
 
 productRouter.get('/',async(req,res)=>{
