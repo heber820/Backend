@@ -1,6 +1,5 @@
 import fs from 'fs'
 
-
 export class ProductManager {
 
   constructor(path) {
@@ -123,12 +122,6 @@ export class ProductManager {
         : read[read.length - 1].id + 1
     return id
   }
-
-  // async #evaluarProductoId(id){
-  //   const read = await this.getProducts()
-  //   const findId = read.find((product)=>product.id === id)
-  //   return findId
-  // }
 
   async #evaluarCode(code){
     const read = await this.getProducts()

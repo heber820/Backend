@@ -1,16 +1,23 @@
 import { Router } from 'express'
-import {ProductManager} from '../src/dao/fileManager/productManager.js'
-
+// import {ProductManager} from '../src/dao/fileManager/productManager.js'
+import {ProductManager} from '../src/dao/mongoManager/productManager.js'
+import {CartManager} from '../src/dao/mongoManager/cartManager.js'
 import socketServer from "../src/app.js";
+import {productsModel} from '../src/dao/models/products.model.js';
+import { cartsModel } from '../src/dao/models/carts.model.js';
 
 const viewsRouter = Router()
-const productManager = new ProductManager('./archivos/products.json') 
+// const productManager = new ProductManager('./archivos/products.json') 
+const productManager = new ProductManager() 
+const cartManager = new CartManager()
+
+
+//get 
 
 viewsRouter.get('/',async(req,res)=>{
-  const products = await productManager.getProducts('max')
+  const products = await productManager.getProducts()
     res.render('home', {products})
 })
-
 
 viewsRouter.get('/realtimeproducts',async (req,res)=>{
   const products = await productManager.getProducts('max')
@@ -20,6 +27,36 @@ viewsRouter.get('/realtimeproducts',async (req,res)=>{
     res.render('realTimeProducts', {products})
 })
 
+
+viewsRouter.get('/products',async(req,res)=>{
+    try {
+        // /?limit=1&page=1
+        const {limit=10, page=1, category} = req.query //default 10 y 1
+        let products 
+        if(!category){
+          products = await productsModel.find().limit(limit).skip(page-1).lean()
+        }else{
+          products = await productsModel.find({category}).limit(limit).skip(page-1).lean()
+        }
+        console.log(products)
+          res.render('products', {products})
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+viewsRouter.get('/carts/:cartId', async(req,res) => {
+  const {cartId} = req.params
+  const cart = await cartsModel.find({_id:cartId}).lean()
+  if(!cart){
+      res.json({message: 'Cart not found'})
+  }else{
+      res.render('cart', {cart});
+  }
+});
+
+
+//post
 
 viewsRouter.post('/realtimeproducts', async(req, res)=>{
   try {
