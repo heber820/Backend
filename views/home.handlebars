@@ -1,19 +1,22 @@
+
 {{!-- ciclos if y for each--}}
 
 {{!-- si hay productos: --}}
+    <h1 style="margin-left: 20px; margin-top: 20px">Welcome to the Home!</h1>
+
 
 {{#if products.length}}
     {{#each products}}
     <div class="card" style="width: 18rem; margin-left: 20px; margin-bottom: 20px">
-        <img src={{thumbnail}} class="card-img-top" alt="imagen">
+        <img src={{products.thumbnail}} class="card-img-top" alt="img">
         <div class="card-body">
-            <h5 class="card-title">{{title}}</h5>
-            <p class="card-text">{{description}}</p>
+            <h5 class="card-title">{{products.title}}</h5>
+            <p class="card-text">{{products.description}}</p>
         </div>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">Price: {{price}}</li>
-            <li class="list-group-item">Stock: {{stock}}</li>
-            <li class="list-group-item">Category: {{category}}</li>
+            <li class="list-group-item">Price: {{products.price}}</li>
+            <li class="list-group-item">Stock: {{products.stock}}</li>
+            <li class="list-group-item">Category: {{products.category}}</li>
         </ul>
     </div>
     {{/each}}
