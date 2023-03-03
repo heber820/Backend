@@ -8,7 +8,7 @@ import usersRouter from '../routes/users.router.js'
 import { __dirname } from '../utils.js'
 import handlebars from 'express-handlebars'
 import { Server } from 'socket.io'
-import './dbConfig.js'
+import './dbconfigs.js'
 import { messagesModel } from "./dao/models/messages.model.js";
 import cookieParser from 'cookie-parser'
 import session from 'express-session'

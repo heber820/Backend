@@ -23,7 +23,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon src/archivos/app.js"
+    "start": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
