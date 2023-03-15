@@ -1,113 +1,138 @@
-import { Router } from 'express'
-// import {ProductManager} from '../src/dao/fileManager/productManager.js'
-import {ProductManager} from '../src/dao/mongoManager/productManager.js'
-import {CartManager} from '../src/dao/mongoManager/cartManager.js'
-import socketServer from "../src/app.js";
-import {productsModel} from '../src/dao/models/products.model.js';
-import { cartsModel } from '../src/dao/models/carts.model.js';
-import {auth, isLogged, isAdmin, isUser} from '../middlewares/auth.middleware.js'
-
-const viewsRouter = Router()
-// const productManager = new ProductManager('./archivos/products.json') 
-const productManager = new ProductManager() 
-const cartManager = new CartManager()
+import fs from 'fs'
 
 
-//get 
+export class ProductManager {
 
-viewsRouter.get('/',async(req,res)=>{
-  const products = await productManager.getProducts()
-    res.render('home', {products})
-})
-
-viewsRouter.get('/realtimeproducts',async (req,res)=>{
-  const products = await productManager.getProducts('max')
-  socketServer.on('connection', (socket)=>{
-    socket.emit('products', products)
-  })
-    res.render('realTimeProducts', {products})
-})
-
-viewsRouter.get('/admin',auth,isAdmin,async(req,res)=>{
-    try {
-        // /?limit=1&page=1
-        const {limit=10, page=1, category} = req.query //default 10 y 1
-        let products 
-        if(!category){
-          products = await productsModel.find().limit(limit).skip(page-1).lean()
-        }else{
-          products = await productsModel.find({category}).limit(limit).skip(page-1).lean()
-        }
-        console.log(products)
-          res.render('admin', {products, email:req.session.email, first_name:req.session.first_name, last_name:req.session.last_name, role: req.session.role})
-    } catch (error) {
-        console.log(error)
-    }
-})
-
-viewsRouter.get('/products',auth, async(req,res)=>{
-    try {
-        // /?limit=1&page=1
-        const {limit=10, page=1, category} = req.query //default 10 y 1
-        let products 
-        if(!category){
-          products = await productsModel.find().limit(limit).skip(page-1).lean()
-        }else{
-          products = await productsModel.find({category}).limit(limit).skip(page-1).lean()
-        }
-        console.log(products)
-          res.render('products', {products, email:req.session.email, first_name:req.session.first_name, last_name:req.session.last_name, role: req.session.role})
-    } catch (error) {
-        console.log(error)
-    }
-})
-
-viewsRouter.get('/carts/:cartId', async(req,res) => {
-  const {cartId} = req.params
-  const cart = await cartsModel.find({_id:cartId}).lean()
-  if(!cart){
-      res.json({message: 'Cart not found'})
-  }else{
-      res.render('cart', {cart});
+  constructor(path) {
+    this.path = path
   }
-});
 
-
-viewsRouter.get('/signup',isLogged, (req, res)=>{
-  res.render('signup')
-})
-
-viewsRouter.get('/errorSignup', (req, res)=>{
-  res.render('errorSignup')
-})
-
-viewsRouter.get('/login',isLogged, (req, res)=>{
-  res.render('login')
-})
-
-
-viewsRouter.get('/errorLogin', (req, res)=>{
-  res.render('errorLogin')
-})
-
-viewsRouter.get('/admin', (req, res)=>{
-  res.render('admin')
-})
-
-
-
-//post
-
-viewsRouter.post('/realtimeproducts', async(req, res)=>{
-  try {
-    const product = await req.body
-    console.log('product:',product)
-    await productManager.addProduct(product)
-    const products = await productManager.getProducts('max')
-    socketServer.sockets.emit('products', products)
-  } catch (error) {
-    return error
+  async getProducts(limit){
+    try {
+      if(fs.existsSync(this.path)){
+        const infoProducts = await fs.promises.readFile(this.path, 'utf-8')
+        if(limit === 'max'){
+          console.log(infoProducts)
+          return JSON.parse(infoProducts)
+        }else{
+          return JSON.parse(infoProducts).slice(0, limit)
+        }
+      } else {
+        return []
+      }
+    } catch (error) {
+      return error
+    }
   }
-})
 
-export default viewsRouter
+
+  async addProduct(producto) {
+    const {title,description,code,price,stock,category,thumbnail,status} = producto
+    try {
+      console.log(title,description,code,price,stock,category)
+    if(!title || !description || !price || !code || !stock || !category) {
+      return console.log('Error, product incomplete');
+    } else {
+        const isCode = await this.#evaluarCode(code)
+        if(isCode){
+          console.log('That code already exist, try again')
+        } else {
+          const product = {
+            id: await this.#generarId(), 
+            title,
+            description,
+            code,
+            price,
+            stock,
+            category, 
+            thumbnail: "../../img/iphone-13-pink-select-2021.png",
+            status: true,
+          }
+          const read = await this.getProducts()
+          read.push(product)
+          console.log(read)
+          await fs.promises.writeFile(this.path, JSON.stringify(read, null, 2))
+          return product
+        } 
+    }
+    } catch(error) {
+      console.log(error)
+      return error
+    } 
+  }
+
+  async getProductById(idProduct){
+    try {
+      const read = await this.getProducts()
+      const prod = read.find((p)=>p.id===parseInt(idProduct))
+      if(prod){
+        console.log(prod)
+        return prod
+      }else{
+        return 'product not found'
+      }
+    } catch(error) {
+      console.log(error)
+      return error
+    }
+  }
+
+  async updateProduct(idProduct, change){
+    let read = await fs.promises.readFile(this.path, 'utf-8')
+    read = JSON.parse(read)
+    let product = await this.getProductById(idProduct)
+    if(product){
+      product = {...product, ...change}
+      read = read.map(prod => {
+        if(prod.id == product.id){
+          prod = product
+        }
+        return prod
+      })
+      read = JSON.stringify(read, null, 2)
+      await fs.promises.writeFile(this.path, read)
+      console.log(JSON.parse(read))
+      return read
+    }else{
+      return null
+    }
+  }
+
+  async deleteProduct(idProduct){
+    try {
+      let read = await fs.promises.readFile(this.path, 'utf-8')
+    read = JSON.parse(read)
+    let product = await this.getProductById(idProduct)
+    if(product){
+      const filtrado =read.filter(prod => prod.id != idProduct)
+      await fs.promises.writeFile(this.path, JSON.stringify(filtrado, null, 2))
+      return filtrado
+    }
+    } catch (error) {
+      console.log(error)
+      return error
+    }
+  }
+
+
+  async #generarId() {
+    const read = await this.getProducts()
+    let id =
+      read.length === 0
+        ? 1
+        : read[read.length - 1].id + 1
+    return id
+  }
+
+  // async #evaluarProductoId(id){
+  //   const read = await this.getProducts()
+  //   const findId = read.find((product)=>product.id === id)
+  //   return findId
+  // }
+
+  async #evaluarCode(code){
+    const read = await this.getProducts()
+    const findCode = read.find((product)=>product.code === code)
+    return findCode
+  }
+}

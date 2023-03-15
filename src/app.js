@@ -8,10 +8,11 @@ import usersRouter from '../routes/users.router.js'
 import { __dirname } from '../utils.js'
 import handlebars from 'express-handlebars'
 import { Server } from 'socket.io'
-import './dbconfigs.js'
+import './dbConfig.js'
 import { messagesModel } from "./dao/models/messages.model.js";
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
+import passport from 'passport'
 
 const app = express()
 
@@ -36,13 +37,19 @@ app.set('views', __dirname + '/views')
 //session mongo
 app.use(session({
   store: new mongoStore({
-    mongoUrl: 'mongodb+srv://MaviChillo:mimamamemima1@cluster0.ijd1vjv.mongodb.net/ecommerce?retryWrites=true&w=majority'
+    mongoUrl: "mongodb+srv://heber_820:Capitan2022@cluster0.bmndadr.mongodb.net/ecommerce?retryWrites=true&w=majority"
   }),
   resave: true,
   saveUninitialized:true,
   secret: 'secretKey',
   cookie: {maxAge: 60000}
 }))
+
+//trabajar con passport
+  //inicializar
+  app.use(passport.initialize())
+  //passport va a guardar la info de session
+  app.use(passport.session())
 
 // ROUTES
 app.use('/', viewsRouter)
