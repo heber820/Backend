@@ -139,6 +139,3 @@ export class CartManager {
     }
 
 }
-
-
-

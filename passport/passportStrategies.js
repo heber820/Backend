@@ -3,12 +3,13 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { usersModel } from "../src/dao/models/users.model.js";
 import {hashPassword, comparePasswords} from '../utils.js';
 import { Strategy as GitHubStrategy } from "passport-github2";
+import {ExtractJwt ,Strategy as jwtStrategy} from "passport-jwt"
 
-//passport local
+//local passport 
 passport.use('signup', new LocalStrategy({
-    usernameField: 'email',//especificar que mi campo no es username, sino email
+    usernameField: 'email',
     passwordField: 'password',
-    passReqToCallback: true //habilita recibir toda la info por req
+    passReqToCallback: true
 },async(req, email, password, done)=>{
     const user = await usersModel.find({email})
     if(user.length!==0){
@@ -16,7 +17,7 @@ passport.use('signup', new LocalStrategy({
     }
     const hashNewPassword = await hashPassword(password)
     const newUser = {...req.body, password:hashNewPassword}
-    //guardado del hash
+    //hash
     const newUserBD = await usersModel.create(newUser)
     done(null, newUserBD)
 }))
@@ -50,6 +51,22 @@ passport.use('githubLogin', new GitHubStrategy({
   }
 ));
 
+const cookieExtractor = (req)=>{
+    const token = req?.cookies?.token
+    return token
+}
+
+passport.use('current', new jwtStrategy({
+    jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+    secretOrKey: 'secretJWT'
+}, async (jwtPayload, done)=>{
+    console.log('----jwtpayload----', jwtPayload);
+    if(jwtPayload.user){
+        done(null, jwtPayload.user)
+    }else{
+        done(null, false)
+    }
+}))
 
 
 
