@@ -1,10 +1,10 @@
 import { Router } from 'express'
 // import {ProductManager} from '../src/dao/fileManager/productManager.js'
-import {ProductManager} from '../src/dao/mongoManager/productManager.js'
-import {CartManager} from '../src/dao/mongoManager/cartManager.js'
-import socketServer from "../src/app.js";
-import {productsModel} from '../src/dao/models/products.model.js';
-import { cartsModel } from '../src/dao/models/carts.model.js';
+import {ProductManager} from '../dao/mongoManager/productManager.js'
+import {CartManager} from '../dao/mongoManager/cartManager.js'
+import socketServer from "../app.js";
+import {productsModel} from '../dao/models/products.model.js';
+import { cartsModel } from '../dao/models/carts.model.js';
 import {auth, isLogged, isAdmin} from '../middlewares/auth.middleware.js'
 
 const viewsRouter = Router()
