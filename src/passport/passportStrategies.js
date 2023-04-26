@@ -1,15 +1,15 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { usersModel } from "../dao/models/users.model.js";
-import {hashPassword, comparePasswords} from '../../utils.js';
+import {hashPassword, comparePasswords, generateToken} from '../../utils.js';
 import { Strategy as GitHubStrategy } from "passport-github2";
 import {ExtractJwt ,Strategy as jwtStrategy} from "passport-jwt"
 
-//local passport 
+//passport local
 passport.use('signup', new LocalStrategy({
-    usernameField: 'email',
+    usernameField: 'email',//especificar que mi campo no es username, sino email
     passwordField: 'password',
-    passReqToCallback: true
+    passReqToCallback: true //habilita recibir toda la info por req
 },async(req, email, password, done)=>{
     const user = await usersModel.find({email})
     if(user.length!==0){
@@ -17,7 +17,7 @@ passport.use('signup', new LocalStrategy({
     }
     const hashNewPassword = await hashPassword(password)
     const newUser = {...req.body, password:hashNewPassword}
-    //hash
+    //guardado del hash
     const newUserBD = await usersModel.create(newUser)
     done(null, newUserBD)
 }))
@@ -27,12 +27,12 @@ passport.use('login', new LocalStrategy({
     usernameField: 'email',//especificar que mi campo no es username, sino email
     passwordField: 'password',
     passReqToCallback: true //habilita recibir toda la info por req
-},async(req, email, password, done)=>{
+},async(res, email, password, done)=>{
     const user = await usersModel.findOne({email})
     if(user.length!==0){
         const isPass = await comparePasswords(password, user.password)
         if(isPass){
-        return done(null, user)
+            return done(null, user)
         }
     }else{
         return done(null, false)

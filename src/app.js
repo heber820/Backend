@@ -13,6 +13,7 @@ import { messagesModel } from "./dao/models/messages.model.js";
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import passport from 'passport'
+import config from './config.js'
 
 const app = express()
 
@@ -31,7 +32,7 @@ app.use(cookieParser())
 //handlebars
 app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
-app.set('views', __dirname + '/views')
+app.set('views', __dirname + '/src/views')
 
 
 //session mongo
@@ -45,7 +46,7 @@ app.use(session({
   cookie: {maxAge: 60000}
 }))
 
-//trabajar con passport
+/trabajar con passport
   //inicializar
   app.use(passport.initialize())
   //passport va a guardar la info de session
@@ -55,20 +56,18 @@ app.use(session({
 app.use('/', viewsRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
-app.use('/session', sessionsRouter)
+app.use('/api/sessions', sessionsRouter)
 app.use('/users', usersRouter)
 app.use('/chat', chatRouter)
 
 
-const PORT = 8080
-
-const httpServer = app.listen(PORT, () => {
-  console.log(`Escuchando al puerto ${PORT}`)
+const httpServer = app.listen(config.port, () => {
+  console.log(`Escuchando al puerto ${config.port}`)
 })
 
-const mensajes = []
 
 const socketServer = new Server(httpServer) 
+const mensajes = []
 
 socketServer.on('connection', (socket)=>{
     console.log(`Usuario conectado: ${socket.id}`)
@@ -82,6 +81,7 @@ socketServer.on('connection', (socket)=>{
     socket.on('mensaje', info=>{
       mensajes.push(info)
       socketServer.emit('chat', mensajes)
+      // console.log('mensajes', mensajes)
       async function addMessage(){
         try {
           const newMessage = await messagesModel.create(info)
