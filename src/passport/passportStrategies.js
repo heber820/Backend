@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { usersModel } from "../dao/models/users.model.js";
-import {hashPassword, comparePasswords, generateToken} from '../../utils.js';
+import {hashPassword, comparePasswords, generateToken} from '../utils/utils.js';
 import { Strategy as GitHubStrategy } from "passport-github2";
 import {ExtractJwt ,Strategy as jwtStrategy} from "passport-jwt"
 
@@ -40,10 +40,12 @@ passport.use('login', new LocalStrategy({
 }))
 
 
+
+
 //passport github
 passport.use('githubLogin', new GitHubStrategy({
-    clientID: 'Iv1.ace2735b78049d89',
-    clientSecret: '6b3465805c90ef9107705ce01a05442a0f39f4ec',
+    clientID: 'Iv1.c4ec79fba1d1f84c',
+    clientSecret: '444e7f0044c719cb605534c041ca275ed32a7a22',
     callbackURL: "http://localhost:8080/users/github"
   }, async (accessToken, refreshToken, profile, done) => {
     const usuario = await usersModel.findOne({email:profile._json.email})
@@ -51,7 +53,20 @@ passport.use('githubLogin', new GitHubStrategy({
   }
 ));
 
-const cookieExtractor = (req)=>{
+
+//passport jwt
+
+// passport.use('jwt', new jwtStrategy({
+//     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+//     secretOrKey: 'secretJWT'
+// }, async (jwtPayload, done)=>{
+//     console.log('----jwtpayload----', jwtPayload);
+//     done(null, jwtPayload.user)
+// }))
+
+//passport jwt con token en cookies
+
+export const cookieExtractor = (req)=>{
     const token = req?.cookies?.token
     return token
 }
@@ -67,7 +82,6 @@ passport.use('current', new jwtStrategy({
         done(null, false)
     }
 }))
-
 
 
 
