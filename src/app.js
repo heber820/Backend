@@ -5,7 +5,9 @@ import viewsRouter from './routes/views.router.js'
 import chatRouter from './routes/chat.router.js'
 import sessionsRouter from './routes/sessions.router.js'
 import usersRouter from './routes/users.router.js'
-import { __dirname } from '../utils.js'
+import mockingRouter from './routes/mocking.router.js'
+import loggerRouter from './routes/logger.router.js'
+import { __dirname } from './utils/utils.js'
 import handlebars from 'express-handlebars'
 import { Server } from 'socket.io'
 import './dbConfig.js'
@@ -14,6 +16,9 @@ import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import passport from 'passport'
 import config from './config.js'
+import { errorMiddleware } from './utils/errors/errors.middleware.js'
+import {generateLog} from './middlewares/winston.middleware.js';
+
 
 const app = express()
 
@@ -38,7 +43,7 @@ app.set('views', __dirname + '/src/views')
 //session mongo
 app.use(session({
   store: new mongoStore({
-    mongoUrl: "mongodb+srv://heber_820:Capitan2022@cluster0.bmndadr.mongodb.net/ecommerce?retryWrites=true&w=majority"
+    mongoUrl: 'mongodb+srv://heber_820:Capitan2022@cluster0.bmndadr.mongodb.net/ecommerce?retryWrites=true&w=majority'
   }),
   resave: true,
   saveUninitialized:true,
@@ -46,7 +51,7 @@ app.use(session({
   cookie: {maxAge: 60000}
 }))
 
-/trabajar con passport
+//trabajar con passport
   //inicializar
   app.use(passport.initialize())
   //passport va a guardar la info de session
@@ -59,11 +64,19 @@ app.use('/api/carts', cartsRouter)
 app.use('/api/sessions', sessionsRouter)
 app.use('/users', usersRouter)
 app.use('/chat', chatRouter)
+app.use('/mockingproducts', mockingRouter)
+app.use('/loggerTest', loggerRouter)
+
+
+app.use(generateLog)
+
+app.use(errorMiddleware)
 
 
 const httpServer = app.listen(config.port, () => {
   console.log(`Escuchando al puerto ${config.port}`)
 })
+
 
 
 const socketServer = new Server(httpServer) 
@@ -98,3 +111,9 @@ socketServer.on('connection', (socket)=>{
 })
 
 export default socketServer;
+
+
+
+
+
+
