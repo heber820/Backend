@@ -1,0 +1,35 @@
+{
+  message: 'Method: GET - URL: /api/docs - Date: 19/5/2023, 23:11:54',
+  level: 'info',
+  timestamp: '2023-05-20T02:11:54.496Z'
+}
+{
+  message: 'Method: GET - URL: /api/docs/ - Date: 19/5/2023, 23:11:55',
+  level: 'info',
+  timestamp: '2023-05-20T02:11:55.038Z'
+}
+{
+  message: 'Method: GET - URL: /api/docs/swagger-ui.css - Date: 19/5/2023, 23:11:56',
+  level: 'info',
+  timestamp: '2023-05-20T02:11:56.446Z'
+}
+{
+  message: 'Method: GET - URL: /api/docs/swagger-ui-bundle.js - Date: 19/5/2023, 23:11:56',
+  level: 'info',
+  timestamp: '2023-05-20T02:11:56.498Z'
+}
+{
+  message: 'Method: GET - URL: /api/docs/swagger-ui-standalone-preset.js - Date: 19/5/2023, 23:11:56',
+  level: 'info',
+  timestamp: '2023-05-20T02:11:56.719Z'
+}
+{
+  message: 'Method: GET - URL: /api/docs/swagger-ui-init.js - Date: 19/5/2023, 23:11:56',
+  level: 'info',
+  timestamp: '2023-05-20T02:11:56.750Z'
+}
+{
+  message: 'Method: GET - URL: /api/docs/favicon-32x32.png - Date: 19/5/2023, 23:11:59',
+  level: 'info',
+  timestamp: '2023-05-20T02:11:59.102Z'
+}
