@@ -4,7 +4,7 @@ import {CartManager} from '../dao/mongoManager/cartManager.js'
 import socketServer from "../app.js";
 import {productsModel} from '../dao/models/products.model.js';
 import { cartsModel } from '../dao/models/carts.model.js';
-import {auth, isLogged, isAdmin, isNOTAdmin, isPremium} from '../middlewares/auth.middleware.js'
+import {auth, isLogged,Logged, isAdmin, isNOTAdmin, isPremium} from '../middlewares/auth.middleware.js'
 import {getAllProducts} from '../controllers/products.controller.js';
 
 const viewsRouter = Router()
@@ -126,6 +126,17 @@ viewsRouter.get('/successChangePassword', (req,res)=>{
   res.render('successChangePassword')
 })
 
+viewsRouter.get('/uploadDocs',Logged, (req,res)=>{
+  res.render('uploadDocs')
+})
+
+viewsRouter.get('/filesUploaded', (req,res)=>{
+  res.render('filesUploaded')
+})
+
+viewsRouter.get('/upgradeToPremium', (req,res)=>{
+  res.render('upgradeToPremium')
+})
 
 
 //post
