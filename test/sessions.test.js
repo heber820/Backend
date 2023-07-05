@@ -20,9 +20,6 @@ describe('Test de endpoint de session', function(){
 
     let cookie
 
-    //comentar signup una vez utilizado para no dar error. 
-    //o cambiar propiedad email del userTest
-
     it('Prueba de registro metodo POST en /users/signup', async function(){
         const response = await request.post('/users/signup').send(userTest)
         console.log(response)
@@ -32,7 +29,6 @@ describe('Test de endpoint de session', function(){
 
     it('Prueba de login metodo POST en /users/login', async function(){
         const response = await request.post('/users/login').send(userTest1)
-        // console.log(response.headers)
         const tokenCookie = response.headers['set-cookie'][0].split(';')[0]
         cookie ={
             name: tokenCookie.split('=')[0],
@@ -45,7 +41,6 @@ describe('Test de endpoint de session', function(){
 
     it('Prueba de metodo GET en /api/sessions', async function(){
         const response = await request.get('/api/sessions/current').set('Cookie', `${cookie.name} = ${cookie.value}`)
-        // console.log(response.statusCode)
         expect(response._body).to.have.property('user')
         expect(response.statusCode).to.be.equal(200)
     })

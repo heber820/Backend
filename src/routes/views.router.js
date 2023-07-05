@@ -11,7 +11,6 @@ const viewsRouter = Router()
 const productManager = new ProductManager() 
 const cartManager = new CartManager()
 
-
 //get 
 
 viewsRouter.get('/',async(req,res)=>{
@@ -29,7 +28,6 @@ viewsRouter.get('/realtimeproducts',async (req,res)=>{
 
 viewsRouter.get('/admin',auth, isAdmin,async(req,res)=>{
     try {
-        // /?limit=1&page=1
         const {limit=10, page=1, category} = req.query //default 10 y 1
         let products 
         if(!category){
@@ -46,7 +44,6 @@ viewsRouter.get('/admin',auth, isAdmin,async(req,res)=>{
 
 viewsRouter.get('/premium',auth, isPremium,async(req,res)=>{
     try {
-        // /?limit=1&page=1
         const {limit=10, page=1, category} = req.query //default 10 y 1
         let products 
         if(!category){
@@ -63,7 +60,6 @@ viewsRouter.get('/premium',auth, isPremium,async(req,res)=>{
 
 viewsRouter.get('/products',auth, isNOTAdmin, async(req,res)=>{
     try {
-        // /?limit=1&page=1
         const {limit=10, page=1, category} = req.query //default 10 y 1
         let products 
         if(!category){
@@ -101,7 +97,6 @@ viewsRouter.get('/login',isLogged, (req, res)=>{
   res.render('login')
 })
 
-
 viewsRouter.get('/errorLogin', (req, res)=>{
   res.render('errorLogin')
 })
@@ -137,7 +132,6 @@ viewsRouter.get('/filesUploaded', (req,res)=>{
 viewsRouter.get('/upgradeToPremium', (req,res)=>{
   res.render('upgradeToPremium')
 })
-
 
 //post
 

@@ -19,8 +19,6 @@ const prod = {
 
 describe('Tests de endpoints de Carts', function(){
 
-    //comentar luego de probar 1 vez para no llenar base de datos
-
     it('Probando metodo POST de /api/carts', async function(){
         const response = await request.post('/api/carts')
         expect(response.statusCode).to.be.equal(200)
@@ -36,8 +34,6 @@ describe('Tests de endpoints de Carts', function(){
         expect(response._body).to.not.have.lengthOf(0)
     })
 
-    // comentar luego de probar 1 vez para no llenar base de datos
-
     it('Probar metodo GET de /api/carts/:cid', async function(){
         const create = await request.post('/api/carts')
         const cid = create._body.newCart._id
@@ -47,8 +43,6 @@ describe('Tests de endpoints de Carts', function(){
         expect(cartdb._body.cart).to.have.property('_id')
     })
 
-    
-    // comentar luego de probar 1 vez para no llenar base de datos
     
     it('Probar metodo PUT de /api/carts/:cid', async function(){
         const create = await request.post('/api/carts')
@@ -60,8 +54,6 @@ describe('Tests de endpoints de Carts', function(){
         expect(response._body).to.have.property('newCart')
         expect(response._body.newCart.products).to.not.have.lengthOf(0)
     })
-
-    // comentar luego de probar 1 vez para no llenar base de datos
     
     it('Probando metodo POST de /api/carts/:cid/purchase', async function(){
         const create = await request.post('/api/carts')
@@ -73,9 +65,6 @@ describe('Tests de endpoints de Carts', function(){
         expect(response._body.message).to.be.equal("Purchase successful. Here's your Ticket:")
         expect(response._body).to.have.property('ticket')
     })
-
-
-    //comentar luego de probar 1 vez para no llenar base de datos
 
     it('Probar metodo PUT de /api/carts/:cid/product/:pid', async function(){
         const create = await request.post('/api/carts')
@@ -90,8 +79,6 @@ describe('Tests de endpoints de Carts', function(){
         expect(response._body.updatedCart.products[0].quantity).to.not.be.equal(prod.products.quantity)
     })
 
-    //comentar luego de probar 1 vez para no llenar base de datos
-
     it('Probar metodo DELETE de /api/carts/:cid', async function(){
         const create = await request.post('/api/carts')
         const cid = create._body.newCart._id
@@ -100,8 +87,6 @@ describe('Tests de endpoints de Carts', function(){
         expect(response._body.message).to.be.equal('cart emptied successfully')
         expect(response._body).to.have.property('cartEmpty')
     })
-
-    //comentar luego de probar 1 vez para no llenar base de datos
 
     it('Probar metodo DELETE de /api/carts/:cid/product/:pid', async function(){
         const create = await request.post('/api/carts')

@@ -27,8 +27,6 @@ const admin = {
 
 describe('Tests de endpoints de Products', function(){
 
-    //comentar luego de probar 1 vez para no llenar base de datos
-
     it('Probando metodo POST de /api/products', async function(){
         const response = await request.post('/api/products').send(prod)
         console.log(response)
@@ -45,8 +43,6 @@ describe('Tests de endpoints de Products', function(){
         expect(response._body).to.not.have.lengthOf(0)
     })
 
-    //comentar luego de probar 1 vez para no llenar base de datos
-
     it('Probar metodo GET de /api/products/:pid', async function(){
         const create = await request.post('/api/products').send(prod1)
         const pid = create._body.addNewProduct._id
@@ -57,7 +53,6 @@ describe('Tests de endpoints de Products', function(){
         expect(proddb._body.product).to.have.property('owner')
     })
 
-    //comentar luego de probar 1 vez para no llenar base de datos
 
     it('Probar metodo PUT de /api/products/:pid', async function(){
         const create = await request.post('/api/products').send(prod)

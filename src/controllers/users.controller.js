@@ -12,7 +12,6 @@ import config from '../config.js';
 export async function signupUser(req,res){
     try {
         const {email, password} = req.body
-        // console.log(req.body)
         const user = await usersModel.find({email})
         if(user.length!==0){
             logger.error('This user already exists')

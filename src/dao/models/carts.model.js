@@ -14,7 +14,6 @@ const cartsSchema = new mongoose.Schema({
     ]
 })
 
-//populate en el find sin ponerlo en el manager
 cartsSchema.pre('find', function(next){
     this.populate('products.product')
     next()

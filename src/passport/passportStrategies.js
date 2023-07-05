@@ -8,9 +8,9 @@ import { cookies } from "../controllers/users.controller.js";
 
 //passport local
 passport.use('signup', new LocalStrategy({
-    usernameField: 'email',//especificar que mi campo no es username, sino email
+    usernameField: 'email',
     passwordField: 'password',
-    passReqToCallback: true //habilita recibir toda la info por req
+    passReqToCallback: true 
 },async(req, email, password, done)=>{
     const user = await usersModel.find({email})
     if(user.length!==0){
@@ -25,9 +25,9 @@ passport.use('signup', new LocalStrategy({
 
 
 passport.use('login', new LocalStrategy({
-    usernameField: 'email',//especificar que mi campo no es username, sino email
+    usernameField: 'email',
     passwordField: 'password',
-    passReqToCallback: true //habilita recibir toda la info por req
+    passReqToCallback: true 
 },async(res, email, password, done)=>{
     const user = await usersModel.findOne({email})
     if(user.length!==0){
@@ -53,17 +53,6 @@ passport.use('githubLogin', new GitHubStrategy({
     return done(null, usuario)
   }
 ));
-
-
-//passport jwt
-
-// passport.use('jwt', new jwtStrategy({
-//     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-//     secretOrKey: 'secretJWT'
-// }, async (jwtPayload, done)=>{
-//     console.log('----jwtpayload----', jwtPayload);
-//     done(null, jwtPayload.user)
-// }))
 
 //passport jwt con token en cookies
 
